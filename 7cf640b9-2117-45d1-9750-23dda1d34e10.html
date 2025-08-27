@@ -1,0 +1,618 @@
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iglesia Casa de Dios - Sistema de Discipulado</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    primary: '#2B6CB0',
+                    secondary: '#38B2AC',
+                    gray: {
+                        750: '#2D3748',
+                        50: '#F7FAFC'
+                    },
+                    success: '#38A169',
+                    error: '#E53E3E'
+                },
+                fontFamily: {
+                    'inter': ['Inter', 'sans-serif']
+                }
+            }
+        }
+    };
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .gradient-welcome {
+            background: linear-gradient(135deg, #2B6CB0 0%, #38B2AC 100%);
+        }
+        .card-shadow {
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        }
+        .sidebar-active {
+            background-color: rgba(43, 108, 176, 0.1);
+            border-right: 3px solid #2B6CB0;
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .animate-fadeInUp {
+            animation: fadeInUp 0.6s ease-out;
+        }
+        .welcome-phrase {
+            opacity: 0;
+            animation: fadeInOut 4s infinite;
+        }
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; }
+            25%, 75% { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-inter">
+    <!-- @COMPONENT: AppLayout [main layout container] -->
+    <div class="flex h-screen bg-gray-50">
+        <!-- @COMPONENT: Sidebar [navigation menu] -->
+        <aside class="w-64 bg-white card-shadow fixed h-full z-30 lg:relative lg:translate-x-0 transform -translate-x-full transition-transform duration-300 ease-in-out" id="sidebar">
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
+                        <i class="fas fa-church text-white text-lg"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-semibold text-gray-750 text-lg">Casa de Dios</h1>
+                        <p class="text-sm text-gray-500">Discipulado</p>
+                    </div>
+                </div>
+            </div>
+            
+            <nav class="mt-6 px-4">
+                <!-- @STATE: currentPage:string = 'dashboard' -->
+                <a href="#" class="sidebar-active flex items-center px-4 py-3 text-primary font-medium rounded-lg mb-2" data-event="click:navigateTo" data-implementation="Set active state and show corresponding view">
+                    <i class="fas fa-home mr-3"></i>
+                    Dashboard
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg mb-2" data-event="click:navigateTo">
+                    <i class="fas fa-users mr-3"></i>
+                    Miembros
+                    <span class="ml-auto bg-gray-200 text-gray-600 text-xs px-2 py-1 rounded-full" data-bind="memberCount">24</span>
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg mb-2" data-event="click:navigateTo">
+                    <i class="fas fa-user-friends mr-3"></i>
+                    Grupos
+                    <span class="ml-auto bg-gray-200 text-gray-600 text-xs px-2 py-1 rounded-full" data-bind="groupCount">3</span>
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg mb-2" data-event="click:navigateTo">
+                    <i class="fas fa-clipboard-check mr-3"></i>
+                    Asistencia
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg mb-2" data-event="click:navigateTo">
+                    <i class="fas fa-file-pdf mr-3"></i>
+                    Recursos
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg mb-2" data-event="click:navigateTo">
+                    <i class="fas fa-bullhorn mr-3"></i>
+                    Anuncios
+                    <span class="ml-auto bg-error text-white text-xs px-2 py-1 rounded-full" data-bind="unreadAnnouncements">2</span>
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg mb-2" data-event="click:navigateTo">
+                    <i class="fas fa-chart-bar mr-3"></i>
+                    Reportes
+                </a>
+                
+                <div class="border-t border-gray-200 mt-6 pt-6">
+                    <a href="#" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg mb-2" data-event="click:navigateTo">
+                        <i class="fas fa-cog mr-3"></i>
+                        Configuración
+                    </a>
+                    <a href="#" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg" data-event="click:logout" data-implementation="Firebase Auth signOut">
+                        <i class="fas fa-sign-out-alt mr-3"></i>
+                        Cerrar Sesión
+                    </a>
+                </div>
+            </nav>
+        </aside>
+        <!-- @END_COMPONENT: Sidebar -->
+
+        <!-- @COMPONENT: MainContent [dashboard and page content] -->
+        <main class="flex-1 overflow-hidden">
+            <!-- @COMPONENT: TopBar [header with user info and mobile menu] -->
+            <header class="bg-white card-shadow px-6 py-4 flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <button class="lg:hidden text-gray-600 hover:text-gray-900" data-event="click:toggleSidebar" data-implementation="Toggle sidebar visibility on mobile">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                    <div>
+                        <h2 class="text-xl font-semibold text-gray-750">Dashboard</h2>
+                        <p class="text-sm text-gray-500">Gestión de Discipulado</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <!-- @COMPONENT: NotificationBell [announcement notifications] -->
+                    <div class="relative">
+                        <button class="text-gray-600 hover:text-gray-900 relative" data-event="click:showNotifications">
+                            <i class="fas fa-bell text-xl"></i>
+                            <span class="absolute -top-2 -right-2 bg-error text-white text-xs w-5 h-5 rounded-full flex items-center justify-center" data-bind="notificationCount">2</span>
+                        </button>
+                    </div>
+                    <!-- @END_COMPONENT: NotificationBell -->
+                    
+                    <!-- @COMPONENT: UserProfile [current user dropdown] -->
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+                            <span class="text-white text-sm font-medium" data-bind="user.initials">JG</span>
+                        </div>
+                        <div class="hidden md:block">
+                            <p class="text-sm font-medium text-gray-750" data-bind="user.name">Juan García</p>
+                            <p class="text-xs text-gray-500" data-bind="user.role">Administrador</p>
+                        </div>
+                        <button class="text-gray-600 hover:text-gray-900" data-event="click:toggleUserMenu">
+                            <i class="fas fa-chevron-down text-sm"></i>
+                        </button>
+                    </div>
+                    <!-- @END_COMPONENT: UserProfile -->
+                </div>
+            </header>
+            <!-- @END_COMPONENT: TopBar -->
+
+            <!-- @COMPONENT: AnnouncementBanner [high priority announcement banner] -->
+            <div class="bg-gradient-to-r from-primary to-secondary text-white px-6 py-4 animate-fadeInUp" data-mock="true" data-implementation="Show only when high priority announcement exists">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <i class="fas fa-bullhorn text-lg"></i>
+                        <div>
+                            <h3 class="font-medium">Reunión de Líderes - Viernes 7:00 PM</h3>
+                            <p class="text-sm opacity-90">Se requiere la asistencia de todos los líderes de grupos</p>
+                        </div>
+                    </div>
+                    <button class="text-white hover:text-gray-200" data-event="click:dismissBanner">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- @END_COMPONENT: AnnouncementBanner -->
+
+            <!-- @COMPONENT: DashboardContent [main dashboard area] -->
+            <div class="p-6 overflow-y-auto h-full">
+                <!-- @COMPONENT: WelcomeSection [animated welcome messages] -->
+                <div class="gradient-welcome rounded-xl p-8 text-white mb-8 animate-fadeInUp">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h1 class="text-2xl font-bold mb-2">¡Bienvenido de vuelta!</h1>
+                            <!-- @FUNCTIONALITY: Rotate through different welcome phrases every 4 seconds -->
+                            <p class="text-lg opacity-90 welcome-phrase" data-implementation="Cycle through welcome phrases with JavaScript">
+                                ¡Bienvenido, siervo fiel! Tu trabajo no es en vano.
+                            </p>
+                        </div>
+                        <div class="hidden md:block">
+                            <i class="fas fa-praying-hands text-4xl opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+                <!-- @END_COMPONENT: WelcomeSection -->
+
+                <!-- @COMPONENT: StatCards [key performance indicators] -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-white rounded-xl p-6 card-shadow animate-fadeInUp">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-500 mb-1">Miembros Activos</p>
+                                <p class="text-2xl font-bold text-gray-750" data-bind="stats.activeMembers">24</p>
+                                <p class="text-xs text-success">+3 este mes</p>
+                            </div>
+                            <div class="w-12 h-12 bg-primary bg-opacity-10 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-users text-primary text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 card-shadow animate-fadeInUp">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-500 mb-1">Grupos Activos</p>
+                                <p class="text-2xl font-bold text-gray-750" data-bind="stats.activeGroups">3</p>
+                                <p class="text-xs text-success">Todos activos</p>
+                            </div>
+                            <div class="w-12 h-12 bg-secondary bg-opacity-10 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-user-friends text-secondary text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 card-shadow animate-fadeInUp">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-500 mb-1">% Bautizados</p>
+                                <p class="text-2xl font-bold text-gray-750" data-bind="stats.baptizedPercentage">87%</p>
+                                <p class="text-xs text-gray-500">21 de 24</p>
+                            </div>
+                            <div class="w-12 h-12 bg-success bg-opacity-10 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-water text-success text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 card-shadow animate-fadeInUp">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-500 mb-1">Promedio Asistencia</p>
+                                <p class="text-2xl font-bold text-gray-750" data-bind="stats.averageAttendance">18</p>
+                                <p class="text-xs text-success">75% del total</p>
+                            </div>
+                            <div class="w-12 h-12 bg-primary bg-opacity-10 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-chart-line text-primary text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- @END_COMPONENT: StatCards -->
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                    <!-- @COMPONENT: AttendanceChart [weekly attendance visualization] -->
+                    <div class="bg-white rounded-xl p-6 card-shadow animate-fadeInUp">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-lg font-semibold text-gray-750">Asistencia Semanal</h3>
+                            <button class="text-primary hover:text-blue-800 text-sm font-medium" data-event="click:exportChart" data-implementation="Export chart as PNG using Chart.js">
+                                <i class="fas fa-download mr-1"></i>
+                                Exportar
+                            </button>
+                        </div>
+                        <div class="h-64" data-implementation="Implement Chart.js line chart here">
+                            <!-- Placeholder for Chart.js canvas -->
+                            <div class="w-full h-full bg-gray-100 rounded-lg flex items-center justify-center">
+                                <div class="text-center">
+                                    <i class="fas fa-chart-line text-4xl text-gray-400 mb-2"></i>
+                                    <p class="text-gray-500">Gráfico de Asistencia</p>
+                                    <p class="text-sm text-gray-400">Datos de las últimas 8 semanas</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- @END_COMPONENT: AttendanceChart -->
+
+                    <!-- @COMPONENT: RecentActivity [recent activities and updates] -->
+                    <div class="bg-white rounded-xl p-6 card-shadow animate-fadeInUp">
+                        <h3 class="text-lg font-semibold text-gray-750 mb-6">Actividad Reciente</h3>
+                        <div class="space-y-4">
+                            <!-- @MAP: recentActivities.map(activity => ( -->
+                            <div class="flex items-start space-x-3" data-mock="true">
+                                <div class="w-8 h-8 bg-success bg-opacity-10 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-user-plus text-success text-sm"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm text-gray-750 font-medium">Nuevo miembro agregado</p>
+                                    <p class="text-xs text-gray-500">María González se unió al Discipulado Norte</p>
+                                    <p class="text-xs text-gray-400 mt-1">Hace 2 horas</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start space-x-3" data-mock="true">
+                                <div class="w-8 h-8 bg-primary bg-opacity-10 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-clipboard-check text-primary text-sm"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm text-gray-750 font-medium">Asistencia registrada</p>
+                                    <p class="text-xs text-gray-500">Discipulado Norte - 15 asistentes</p>
+                                    <p class="text-xs text-gray-400 mt-1">Hace 5 horas</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start space-x-3" data-mock="true">
+                                <div class="w-8 h-8 bg-secondary bg-opacity-10 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-file-pdf text-secondary text-sm"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm text-gray-750 font-medium">Recurso compartido</p>
+                                    <p class="text-xs text-gray-500">Estudio: "Los Frutos del Espíritu"</p>
+                                    <p class="text-xs text-gray-400 mt-1">Hace 1 día</p>
+                                </div>
+                            </div>
+                            <!-- @END_MAP )) -->
+                        </div>
+                        
+                        <button class="w-full mt-4 text-primary hover:text-blue-800 text-sm font-medium border border-primary hover:bg-primary hover:text-white rounded-lg py-2 transition-colors" data-event="click:viewAllActivities">
+                            Ver toda la actividad
+                        </button>
+                    </div>
+                    <!-- @END_COMPONENT: RecentActivity -->
+                </div>
+
+                <!-- @COMPONENT: GroupsOverview [groups summary cards] -->
+                <div class="bg-white rounded-xl p-6 card-shadow animate-fadeInUp">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-lg font-semibold text-gray-750">Resumen de Grupos</h3>
+                        <button class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors" data-event="click:manageGroups">
+                            <i class="fas fa-plus mr-2"></i>
+                            Nuevo Grupo
+                        </button>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <!-- @MAP: groups.map(group => ( -->
+                        <div class="border border-gray-200 rounded-lg p-4 hover:border-primary transition-colors" data-mock="true">
+                            <div class="flex items-center justify-between mb-3">
+                                <h4 class="font-medium text-gray-750">Discipulado Norte</h4>
+                                <span class="bg-success text-white text-xs px-2 py-1 rounded-full">Activo</span>
+                            </div>
+                            <div class="space-y-2 text-sm text-gray-600">
+                                <div class="flex items-center">
+                                    <i class="fas fa-user-tie mr-2 text-gray-400"></i>
+                                    <span>Líder: Pedro Martínez</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-users mr-2 text-gray-400"></i>
+                                    <span>8 miembros</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-calendar mr-2 text-gray-400"></i>
+                                    <span>Viernes 7:30 PM</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-map-marker-alt mr-2 text-gray-400"></i>
+                                    <span>Aurora, CO</span>
+                                </div>
+                            </div>
+                            <div class="mt-4 pt-3 border-t border-gray-100">
+                                <div class="flex justify-between text-xs text-gray-500">
+                                    <span>Última reunión: 15 Nov</span>
+                                    <span>Asistencia: 7/8</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="border border-gray-200 rounded-lg p-4 hover:border-primary transition-colors" data-mock="true">
+                            <div class="flex items-center justify-between mb-3">
+                                <h4 class="font-medium text-gray-750">Discipulado Sur</h4>
+                                <span class="bg-success text-white text-xs px-2 py-1 rounded-full">Activo</span>
+                            </div>
+                            <div class="space-y-2 text-sm text-gray-600">
+                                <div class="flex items-center">
+                                    <i class="fas fa-user-tie mr-2 text-gray-400"></i>
+                                    <span>Líder: Ana Rodríguez</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-users mr-2 text-gray-400"></i>
+                                    <span>6 miembros</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-calendar mr-2 text-gray-400"></i>
+                                    <span>Sábado 6:00 PM</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-map-marker-alt mr-2 text-gray-400"></i>
+                                    <span>Aurora, CO</span>
+                                </div>
+                            </div>
+                            <div class="mt-4 pt-3 border-t border-gray-100">
+                                <div class="flex justify-between text-xs text-gray-500">
+                                    <span>Última reunión: 16 Nov</span>
+                                    <span>Asistencia: 5/6</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="border border-gray-200 rounded-lg p-4 hover:border-primary transition-colors" data-mock="true">
+                            <div class="flex items-center justify-between mb-3">
+                                <h4 class="font-medium text-gray-750">Discipulado Centro</h4>
+                                <span class="bg-success text-white text-xs px-2 py-1 rounded-full">Activo</span>
+                            </div>
+                            <div class="space-y-2 text-sm text-gray-600">
+                                <div class="flex items-center">
+                                    <i class="fas fa-user-tie mr-2 text-gray-400"></i>
+                                    <span>Líder: Carlos Mendoza</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-users mr-2 text-gray-400"></i>
+                                    <span>10 miembros</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-calendar mr-2 text-gray-400"></i>
+                                    <span>Jueves 7:00 PM</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-map-marker-alt mr-2 text-gray-400"></i>
+                                    <span>Aurora, CO</span>
+                                </div>
+                            </div>
+                            <div class="mt-4 pt-3 border-t border-gray-100">
+                                <div class="flex justify-between text-xs text-gray-500">
+                                    <span>Última reunión: 14 Nov</span>
+                                    <span>Asistencia: 8/10</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- @END_MAP )) -->
+                    </div>
+                </div>
+                <!-- @END_COMPONENT: GroupsOverview -->
+            </div>
+            <!-- @END_COMPONENT: DashboardContent -->
+        </main>
+        <!-- @END_COMPONENT: MainContent -->
+    </div>
+    <!-- @END_COMPONENT: AppLayout -->
+
+    <!-- @COMPONENT: Footer [global footer with church information] -->
+    <footer class="bg-gray-750 text-white py-8 px-6">
+        <div class="max-w-6xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
+                            <i class="fas fa-church text-white text-lg"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-lg">Iglesia Casa de Dios</h3>
+                            <p class="text-sm text-gray-300">Aurora, Colorado</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="font-medium mb-4">Contacto</h4>
+                    <div class="space-y-2 text-sm text-gray-300">
+                        <div class="flex items-center">
+                            <i class="fas fa-envelope mr-3 text-secondary"></i>
+                            <span>iglesiacasadedios33@gmail.com</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-map-marker-alt mr-3 text-secondary"></i>
+                            <span>Aurora, Colorado</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="font-medium mb-4">Nuestra Misión</h4>
+                    <p class="text-sm text-gray-300 italic leading-relaxed">
+                        "Por tanto, id, y haced discípulos a todas las naciones, bautizándolos en el nombre del Padre, y del Hijo, y del Espíritu Santo; enseñándoles que guarden todas las cosas que os he mandado; y he aquí yo estoy con vosotros todos los días, hasta el fin del mundo. Amén."
+                    </p>
+                    <p class="text-xs text-secondary mt-2 font-medium">Mateo 28:19-20 RVR1960</p>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-600 mt-8 pt-6 text-center">
+                <p class="text-sm text-gray-400">
+                    © 2024 Iglesia Casa de Dios - Sistema de Gestión de Discipulado
+                </p>
+            </div>
+        </div>
+    </footer>
+    <!-- @END_COMPONENT: Footer -->
+
+    <!-- @COMPONENT: MemberModal [example modal for adding/editing members] -->
+    <div class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50" id="memberModal" data-implementation="Show/hide based on modal state">
+        <div class="bg-white rounded-xl p-6 w-full max-w-md mx-4 animate-fadeInUp">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-lg font-semibold text-gray-750">Agregar Nuevo Miembro</h3>
+                <button class="text-gray-400 hover:text-gray-600" data-event="click:closeModal">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <form class="space-y-4" data-event="submit:addMember" data-implementation="Handle form submission with validation">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Nombre</label>
+                        <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Nombre" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Apellido</label>
+                        <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Apellido" required>
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Correo Electrónico</label>
+                    <input type="email" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="correo@ejemplo.com" required>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Teléfono</label>
+                    <input type="tel" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="(303) 555-0123">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Grupo</label>
+                    <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" required>
+                        <option value="">Seleccionar grupo</option>
+                        <option value="norte">Discipulado Norte</option>
+                        <option value="sur">Discipulado Sur</option>
+                        <option value="centro">Discipulado Centro</option>
+                    </select>
+                </div>
+                
+                <div class="flex items-center space-x-6">
+                    <label class="flex items-center">
+                        <input type="checkbox" class="text-primary focus:ring-primary border-gray-300 rounded">
+                        <span class="ml-2 text-sm text-gray-700">Bautizado</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" class="text-primary focus:ring-primary border-gray-300 rounded">
+                        <span class="ml-2 text-sm text-gray-700">En Discipulado</span>
+                    </label>
+                </div>
+                
+                <div class="flex space-x-3 pt-4">
+                    <button type="button" class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors" data-event="click:closeModal">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="flex-1 px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-700 transition-colors">
+                        Guardar Miembro
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- @END_COMPONENT: MemberModal -->
+
+    <script>
+        (function() {
+            // TODO: Implement Firebase Auth, Firestore, and state management
+            
+            // Welcome phrase rotation
+            const phrases = [
+                "¡Bienvenido, siervo fiel! Tu trabajo no es en vano.",
+                "Gracias por cuidar tu grupo. Cada alma cuenta.",
+                "Casa de Dios se edifica con tu servicio. ¡Vamos juntos!",
+                "Dios bendice tu fidelidad. ¡Sigamos discipulando!"
+            ];
+            
+            let currentPhrase = 0;
+            const welcomeElement = document.querySelector('.welcome-phrase');
+            
+            function rotatePhrase() {
+                if (welcomeElement) {
+                    welcomeElement.style.opacity = '0';
+                    setTimeout(() => {
+                        currentPhrase = (currentPhrase + 1) % phrases.length;
+                        welcomeElement.textContent = phrases[currentPhrase];
+                        welcomeElement.style.opacity = '1';
+                    }, 500);
+                }
+            }
+            
+            // Start phrase rotation
+            setInterval(rotatePhrase, 4000);
+            
+            // Mobile sidebar toggle
+            const sidebar = document.getElementById('sidebar');
+            const toggleButtons = document.querySelectorAll('[data-event="click:toggleSidebar"]');
+            
+            toggleButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    sidebar.classList.toggle('-translate-x-full');
+                });
+            });
+            
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', (e) => {
+                if (window.innerWidth < 1024 && !sidebar.contains(e.target) && !e.target.closest('[data-event="click:toggleSidebar"]')) {
+                    sidebar.classList.add('-translate-x-full');
+                }
+            });
+            
+            // TODO: Implement Chart.js for attendance visualization
+            // TODO: Implement Firebase Auth for user authentication
+            // TODO: Implement Firestore for data management
+            // TODO: Implement role-based access control
+            // TODO: Implement PDF/CSV export functionality
+            // TODO: Implement real-time notifications for announcements
+            // TODO: Implement PWA features with service worker
+        })();
+    </script>
+</body>
+</html>

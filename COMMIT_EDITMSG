@@ -1,0 +1,8 @@
+Update PDF generation library and ensure app functionality
+
+Update jspdf dependency to v3.0.2 and jspdf-autotable to v5.0.2, and fix type errors in advanced lesson creation page.
+
+Replit-Commit-Author: Agent
+Replit-Commit-Session-Id: 4fa464c6-053a-4d1b-93f3-88c61dcf1ff1
+Replit-Commit-Checkpoint-Type: full_checkpoint
+Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-production-us-central1/afb4fc0b-794b-4acc-b8cc-a2fbd1a4136d/4fa464c6-053a-4d1b-93f3-88c61dcf1ff1/k7B4kKQ
